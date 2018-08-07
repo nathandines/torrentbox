@@ -5,7 +5,7 @@ driver:
 provisioner:
   name: chef_solo
   always_update_cookbooks: true
-  product_version: '14.3'
+  product_version: '14.2'
 
 verifier:
   name: inspec

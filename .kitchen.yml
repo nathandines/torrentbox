@@ -5,6 +5,7 @@ driver:
 provisioner:
   name: chef_solo
   always_update_cookbooks: true
+  product_name: chef
   product_version: '14.2'
 
 verifier:

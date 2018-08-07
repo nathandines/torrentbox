@@ -21,12 +21,10 @@ task :unit do
   end
 end
 
+require 'kitchen/rake_tasks'
+Kitchen::RakeTasks.new
 desc 'Run Test Kitchen integration tests'
-begin
-  require 'kitchen/rake_tasks'
-  Kitchen::RakeTasks.new
-  task integration: 'kitchen:all'
-end
+task integration: 'kitchen:all'
 
 desc 'Run style and unit tests'
 task default: %w(style unit integration)

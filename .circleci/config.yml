@@ -8,7 +8,16 @@ jobs:
       KITCHEN_LOCAL_YAML: .kitchen.ec2.yml
     steps:
       - checkout
-      - run: chef exec rake
+      - run:
+          name: Style Checking
+          command: chef exec rake style
+      - run:
+          name: Unit Tests
+          command: chef exec rake unit
+      - run:
+          name: Integration Tests
+          command: chef exec rake integration
+
 workflows:
   version: 2
   test:

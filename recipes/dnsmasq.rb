@@ -14,7 +14,7 @@ template '/etc/dnsmasq.conf' do
   notifies :restart, 'service[dnsmasq]', :delayed
   variables(
     local_dns:    node['torrentbox']['local_dns'],
-    vpn_dns:      node['torrentbox']['local_dns'],
+    vpn_dns:      node['torrentbox']['vpn_dns'],
     vpn_hostname: node['torrentbox']['vpn_hostname']
   )
 end

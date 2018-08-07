@@ -1,24 +1,3 @@
 ---
 driver:
   name: ec2
-
-provisioner:
-  name: chef_solo
-  always_update_cookbooks: true
-  product_name: chef
-  product_version: '14.2'
-
-verifier:
-  name: inspec
-
-platforms:
-  - name: debian-9
-
-suites:
-  - name: default
-    run_list:
-      - recipe[torrentbox::default]
-    verifier:
-      inspec_tests:
-        - test/integration/default
-    attributes:

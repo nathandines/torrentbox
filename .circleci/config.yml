@@ -5,7 +5,7 @@ jobs:
     docker:
       - image: chef/chefdk:3.1
     environment:
-      KITCHEN_YAML: .kitchen.ec2.yml
+      KITCHEN_LOCAL_YAML: .kitchen.ec2.yml
     steps:
       - checkout
       - run: chef exec rake

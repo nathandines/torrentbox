@@ -3,3 +3,5 @@
 # Recipe:: default
 #
 # Copyright:: 2018, Nathan Dines, All Rights Reserved.
+
+include_recipe "#{cookbook_name}::dnsmasq"

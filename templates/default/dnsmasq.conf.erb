@@ -1,0 +1,14 @@
+# Chef Template: v0.1
+
+listen-address=127.0.0.1
+bind-interfaces
+domain-needed
+no-resolv
+no-poll
+<% @local_dns.each do |server| -%>
+server=/pool.ntp.org/<%= @vpn_hostname %>/<%= server %>
+<% end -%>
+no-hosts
+<% @vpn_dns.each do |server| -%>
+server=<%= server %>
+<% end -%>

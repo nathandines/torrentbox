@@ -7,9 +7,6 @@ jobs:
     environment:
       KITCHEN_YAML: .kitchen.ec2.yml
     steps:
-      - run: |
-          apt-get -y update
-          apt-get -y install git
       - checkout
       - run: chef exec rake
 workflows:

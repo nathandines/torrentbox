@@ -19,6 +19,10 @@ describe 'torrentbox::default' do
       expect { chef_run }.to_not raise_error
     end
 
+    it 'includes `netconfig` recipe' do
+      expect(chef_run).to include_recipe('torrentbox::netconfig')
+    end
+
     it 'includes `dnsmasq` recipe' do
       expect(chef_run).to include_recipe('torrentbox::dnsmasq')
     end

@@ -4,7 +4,7 @@ Repository which contains the code to deploy a VNC host for downloading torrents
 
 ## Requirements
 
-- Chef ~> 14.3
+- Chef ~> 14.2
 - Inspec ~> 2.2
 - (Development) ChefDK ~> 3.1.0
 

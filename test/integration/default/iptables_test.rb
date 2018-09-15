@@ -14,16 +14,15 @@ vpn_rules = [
   '-A VPN_INPUT -j REJECT --reject-with icmp-proto-unreachable',
 ]
 
+describe command('iptables -t filter -S VPN_INPUT') do
+  its('stdout') { should match "-N VPN_INPUT\n#{vpn_rules.join("\n")}\n" }
+end
+
 vpn_rules.each do |rule|
   # Check rule on filesystem
   describe file('/etc/iptables.d/000_vpninput') do
     it { should be_file }
     its('content') { should match("^#{rule}$") }
-  end
-
-  # Check active rule
-  describe iptables(table: 'filter', chain: 'VPN_INPUT') do
-    it { should have_rule(rule) }
   end
 end
 
@@ -43,16 +42,15 @@ ethernet_rules = [
   '-A ETHOUT -j REJECT --reject-with icmp-proto-unreachable',
 ]
 
+describe command('iptables -t filter -S ETHOUT') do
+  its('stdout') { should match "-N ETHOUT\n#{ethernet_rules.join("\n")}\n" }
+end
+
 ethernet_rules.each do |rule|
   # Check rule on filesystem
   describe file('/etc/iptables.d/100_ethernetoutput') do
     it { should be_file }
     its('content') { should match("^#{rule}$") }
-  end
-
-  # Check active rule
-  describe iptables(table: 'filter', chain: 'ETHOUT') do
-    it { should have_rule(rule) }
   end
 end
 
@@ -62,28 +60,23 @@ describe iptables do
   it { should have_rule('-P INPUT ACCEPT') }
 end
 
-output_rules = [
+input_rules = [
   '-A INPUT -i tun\+ -j VPN_INPUT',
 ]
 
-output_rules.each do |rule|
+describe command('iptables -t filter -S INPUT') do
+  its('stdout') { should match "-P INPUT ACCEPT\n#{input_rules.join("\n").delete('\\')}\n" }
+end
+
+input_rules.each do |rule|
   # Check rule on filesystem
   describe file('/etc/iptables.d/900_input') do
     it { should be_file }
     its('content') { should match("^#{rule}$") }
   end
-
-  # Check active rule
-  describe iptables(table: 'filter', chain: 'INPUT') do
-    it { should have_rule(rule.delete('\\')) }
-  end
 end
 
 # Output
-
-describe iptables do
-  it { should have_rule('-P OUTPUT DROP') }
-end
 
 output_rules = [
   '-A OUTPUT -o lo -j ACCEPT',
@@ -91,15 +84,14 @@ output_rules = [
   '-A OUTPUT -j ETHOUT',
 ]
 
+describe command('iptables -t filter -S OUTPUT') do
+  its('stdout') { should match "-P OUTPUT DROP\n#{output_rules.join("\n").delete('\\')}\n" }
+end
+
 output_rules.each do |rule|
   # Check rule on filesystem
   describe file('/etc/iptables.d/900_output') do
     it { should be_file }
     its('content') { should match("^#{rule}$") }
-  end
-
-  # Check active rule
-  describe iptables(table: 'filter', chain: 'OUTPUT') do
-    it { should have_rule(rule.delete('\\')) }
   end
 end

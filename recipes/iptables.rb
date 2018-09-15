@@ -13,3 +13,12 @@ iptables_rule '000_vpninput' do
     transmission_port: node['torrentbox']['transmission']['port']
   )
 end
+
+iptables_rule '100_ethernetoutput' do
+  action :enable
+  source 'iptables/100_ethernetoutput.erb'
+  variables(
+    local_dns: node['torrentbox']['local_dns'],
+    destination_whitelist: node['torrentbox']['iptables']['destination_whitelist']
+  )
+end

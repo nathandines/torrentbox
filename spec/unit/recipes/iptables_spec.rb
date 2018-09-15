@@ -35,5 +35,18 @@ describe 'torrentbox::iptables' do
         }
       )
     end
+
+    it 'Add Ethernet Output rules to iptables' do
+      expect(chef_run).to create_template('/etc/iptables.d/100_ethernetoutput').with(
+        source: 'iptables/100_ethernetoutput.erb',
+        variables: {
+          local_dns: %w(
+            1.1.1.1
+            1.0.0.1
+          ),
+          destination_whitelist: [],
+        }
+      )
+    end
   end
 end

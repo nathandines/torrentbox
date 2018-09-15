@@ -1,0 +1,24 @@
+# Chef Template: v0.1
+
+*filter
+
+# Commented out new chain for Chef `rebuild-iptables` compatibility
+# :ETHOUT - [0:0]
+
+# Accept return traffic
+-A ETHOUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+# Allow outbound traffic to local DNS servers
+<% @local_dns.each do |server| -%>
+-A ETHOUT -d <%= server.match('/\d{1,2}$') ? server : [server, '/32'].join %> -p udp -m udp --dport 53 -j ACCEPT
+<% end -%>
+<% @destination_whitelist.each do |server| -%>
+-A ETHOUT -d <%= server.match('/\d{1,2}$') ? server : [server, '/32'].join %> -j ACCEPT
+<% end -%>
+-A ETHOUT -p udp -m udp --dport 1194 -j ACCEPT
+-A ETHOUT -p udp -m udp --dport 123 -j ACCEPT
+
+# Reject unmatched traffic
+-A ETHOUT -p tcp -j REJECT --reject-with tcp-reset
+-A ETHOUT -p udp -j REJECT --reject-with icmp-port-unreachable
+-A ETHOUT -j REJECT --reject-with icmp-proto-unreachable

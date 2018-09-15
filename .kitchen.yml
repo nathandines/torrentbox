@@ -22,6 +22,11 @@ suites:
       inspec_tests:
         - test/integration/default
     attributes:
+      torrentbox:
+        iptables:
+          destination_whitelist:
+            - 169.254.169.123
+            - 169.254.168.0/24
   # - name: novpn
   #   run_list:
   #     - recipe[torrentbox::default]

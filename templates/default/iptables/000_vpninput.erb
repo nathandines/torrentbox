@@ -1,0 +1,18 @@
+# Chef Template: v0.1
+
+*filter
+
+# Commented out new chain for Chef `rebuild-iptables` compatibility
+# :VPN_INPUT - [0:0]
+
+# Accept return traffic
+-A VPN_INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+# Allow inbound traffic for Transmission
+-A VPN_INPUT -p tcp -m tcp --dport <%= @transmission_port %> -j ACCEPT
+-A VPN_INPUT -p udp -m udp --dport <%= @transmission_port %> -j ACCEPT
+
+# Reject unmatched traffic
+-A VPN_INPUT -p tcp -j REJECT --reject-with tcp-reset
+-A VPN_INPUT -p udp -j REJECT --reject-with icmp-port-unreachable
+-A VPN_INPUT -j REJECT --reject-with icmp-proto-unreachable

@@ -22,3 +22,13 @@ suites:
       inspec_tests:
         - test/integration/default
     attributes:
+  # - name: novpn
+  #   run_list:
+  #     - recipe[torrentbox::default]
+  #   verifier:
+  #     inspec_tests:
+  #       - test/integration/default
+  #       - test/integration/novpn
+  #   attributes:
+  #     torrentbox:
+  #       vpn_enabled: false

@@ -18,7 +18,10 @@
 -A ETHOUT -p udp -m udp --dport 1194 -j ACCEPT
 -A ETHOUT -p udp -m udp --dport 123 -j ACCEPT
 
+# Allow untracked return SSH traffic during early Chef run
+-A ETHOUT -p tcp -m tcp --sport 22 --tcp-flags ACK ACK -j ACCEPT
+
 # Reject unmatched traffic
--A ETHOUT -p tcp -j REJECT --reject-with tcp-reset
--A ETHOUT -p udp -j REJECT --reject-with icmp-port-unreachable
+-A ETHOUT -p tcp -m tcp -j REJECT --reject-with tcp-reset
+-A ETHOUT -p udp -m udp -j REJECT --reject-with icmp-port-unreachable
 -A ETHOUT -j REJECT --reject-with icmp-proto-unreachable

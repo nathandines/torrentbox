@@ -48,5 +48,17 @@ describe 'torrentbox::iptables' do
         }
       )
     end
+
+    it 'Add Input rules to iptables' do
+      expect(chef_run).to create_template('/etc/iptables.d/900_input').with(
+        source: 'iptables/900_input.erb'
+      )
+    end
+
+    it 'Add Output rules to iptables' do
+      expect(chef_run).to create_template('/etc/iptables.d/900_output').with(
+        source: 'iptables/900_output.erb'
+      )
+    end
   end
 end

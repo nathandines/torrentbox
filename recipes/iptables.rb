@@ -22,3 +22,13 @@ iptables_rule '100_ethernetoutput' do
     destination_whitelist: node['torrentbox']['iptables']['destination_whitelist']
   )
 end
+
+iptables_rule '900_input' do
+  action :enable
+  source 'iptables/900_input.erb'
+end
+
+iptables_rule '900_output' do
+  action :enable
+  source 'iptables/900_output.erb'
+end

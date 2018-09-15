@@ -1,0 +1,9 @@
+# Chef Template: v0.1
+
+*filter
+
+:OUTPUT DROP [0:0]
+
+-A OUTPUT -o lo -j ACCEPT
+-A OUTPUT -o tun+ -j ACCEPT
+-A OUTPUT -j ETHOUT

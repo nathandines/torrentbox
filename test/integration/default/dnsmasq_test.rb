@@ -9,7 +9,11 @@ end
 
 describe file('/etc/dnsmasq.conf') do
   it { should be_file }
-  its('content') { should match(/^# Chef Template: v0.1\n.*/) }
+  its('content') { should match(/^# Chef Template: v0\.1$/) }
+  its('content') { should match('^server=/pool\.ntp\.org/nil\.nathandines\.com/8\.8\.8\.8$') }
+  its('content') { should match('^server=/pool\.ntp\.org/nil\.nathandines\.com/8\.8\.4\.4$') }
+  its('content') { should match('^server=1\.1\.1\.1$') }
+  its('content') { should match('^server=1\.0\.0\.1$') }
 end
 
 describe service('dnsmasq') do
@@ -21,4 +25,9 @@ end
 describe port(53) do
   it { should be_listening }
   its('addresses') { should cmp '127.0.0.1' }
+end
+
+describe file('/etc/resolv.conf') do
+  it { should be_file }
+  its('content') { should eq 'nameserver 127.0.0.1' }
 end

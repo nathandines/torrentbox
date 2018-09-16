@@ -7,11 +7,12 @@
 package 'dnsmasq'
 
 template '/etc/dnsmasq.conf' do
+  action   :create
   source   'dnsmasq.conf.erb'
   owner    'root'
   group    'root'
   mode     '0644'
-  notifies :restart, 'service[dnsmasq]', :delayed
+  notifies :restart, 'service[dnsmasq]', :immediately
   variables(
     local_dns:    node['torrentbox']['local_dns'],
     vpn_dns:      node['torrentbox']['vpn_dns'],
@@ -21,4 +22,12 @@ end
 
 service 'dnsmasq' do
   action %i(enable start)
+end
+
+file '/etc/resolv.conf' do
+  action  :create
+  content 'nameserver 127.0.0.1'
+  owner   'root'
+  group   'root'
+  mode    '0644'
 end

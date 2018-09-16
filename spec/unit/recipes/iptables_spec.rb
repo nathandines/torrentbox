@@ -41,8 +41,8 @@ describe 'torrentbox::iptables' do
         source: 'iptables/100_ethernetoutput.erb',
         variables: {
           local_dns: %w(
-            1.1.1.1
-            1.0.0.1
+            8.8.8.8
+            8.8.4.4
           ),
           destination_whitelist: [],
         }

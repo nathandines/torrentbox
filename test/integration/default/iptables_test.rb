@@ -30,8 +30,8 @@ end
 
 ethernet_rules = [
   '-A ETHOUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT',
-  '-A ETHOUT -d 1.1.1.1/32 -p udp -m udp --dport 53 -j ACCEPT',
-  '-A ETHOUT -d 1.0.0.1/32 -p udp -m udp --dport 53 -j ACCEPT',
+  '-A ETHOUT -d 8.8.8.8/32 -p udp -m udp --dport 53 -j ACCEPT',
+  '-A ETHOUT -d 8.8.4.4/32 -p udp -m udp --dport 53 -j ACCEPT',
   '-A ETHOUT -d 169.254.169.123/32 -j ACCEPT',
   '-A ETHOUT -d 169.254.168.0/24 -j ACCEPT',
   '-A ETHOUT -p udp -m udp --dport 1194 -j ACCEPT',

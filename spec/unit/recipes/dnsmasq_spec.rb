@@ -26,7 +26,7 @@ describe 'torrentbox::dnsmasq' do
     it 'configures `dnsmasq`' do
       expect(chef_run).to create_template('/etc/dnsmasq.conf').with(
         variables: {
-          local_dns:    %w(1.1.1.1 1.0.0.1),
+          local_dns:    %w(8.8.8.8 8.8.4.4),
           vpn_dns:      %w(1.1.1.1 1.0.0.1),
           vpn_hostname: 'nil.nathandines.com',
         }
@@ -36,7 +36,7 @@ describe 'torrentbox::dnsmasq' do
     it 'reloads the `dnsmasq` service on reconfiguration' do
       expect(chef_run.template('/etc/dnsmasq.conf'))
         .to notify('service[dnsmasq]')
-        .to(:restart).delayed
+        .to(:restart).immediately
     end
 
     it 'enable the `dnsmasq` service' do
@@ -45,6 +45,12 @@ describe 'torrentbox::dnsmasq' do
 
     it 'start the `dnsmasq` service' do
       expect(chef_run).to start_service('dnsmasq')
+    end
+
+    it 'sets the system DNS server to `dnsmasq`' do
+      expect(chef_run).to create_file('/etc/resolv.conf').with(
+        content: 'nameserver 127.0.0.1'
+      )
     end
   end
 end

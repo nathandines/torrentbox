@@ -37,5 +37,19 @@ describe 'torrentbox::netconfig' do
     it 'should not execute `sysctl_refresh` without a trigger' do
       expect(chef_run).to_not run_execute('sysctl_refresh')
     end
+
+    it 'configure static IP addressing on the filesystem' do
+      expect(chef_run).to create_template('/etc/network/interfaces')
+    end
+
+    it 'restart the default network interface on reconfiguration' do
+      expect(chef_run.template('/etc/network/interfaces'))
+        .to notify('execute[reload_network]')
+        .to(:run).delayed
+    end
+
+    it 'should not reload the network without a trigger' do
+      expect(chef_run).to_not run_execute('reload_network')
+    end
   end
 end

@@ -15,3 +15,9 @@ describe command('sysctl -b net.ipv6.conf.all.disable_ipv6') do
   its('exit_status') { should cmp 0 }
   its('stdout') { should eq '1' }
 end
+
+# Only the system-level dhclient daemon should be running, not the one for the
+# eth0 interface
+describe command('pgrep -f \'^/sbin/dhclient -4 -v -pf /run/dhclient.eth0.pid -lf /var/lib/dhcp/dhclient.eth0.leases -I -df /var/lib/dhcp/dhclient6.eth0.leases eth0$\'') do
+  its('exit_status') { should cmp 1 }
+end

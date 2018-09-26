@@ -22,18 +22,21 @@ suites:
       inspec_tests:
         - test/integration/default
     attributes:
-      torrentbox:
+      torrentbox: &torrentbox_attributes
         iptables:
           destination_whitelist:
             - 169.254.169.123
             - 169.254.168.0/24
-  # - name: novpn
-  #   run_list:
-  #     - recipe[torrentbox::default]
-  #   verifier:
-  #     inspec_tests:
-  #       - test/integration/default
-  #       - test/integration/novpn
-  #   attributes:
-  #     torrentbox:
-  #       vpn_enabled: false
+        openvpn:
+          username: <%= ENV['OPENVPN_USERNAME'] %>
+          password: <%= ENV['OPENVPN_PASSWORD'] %>
+  - name: novpn
+    run_list:
+      - recipe[torrentbox::default]
+    verifier:
+      inspec_tests:
+        - test/integration/novpn
+    attributes:
+      torrentbox:
+        <<: *torrentbox_attributes
+        vpn_enabled: false

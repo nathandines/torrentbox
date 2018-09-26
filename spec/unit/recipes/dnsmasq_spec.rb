@@ -28,8 +28,11 @@ describe 'torrentbox::dnsmasq' do
         variables: {
           local_dns:    %w(8.8.8.8 8.8.4.4),
           vpn_dns:      %w(1.1.1.1 1.0.0.1),
-          vpn_hostname: 'nil.nathandines.com',
-        }
+          vpn_domain:   'privateinternetaccess.com',
+        },
+        owner: 'root',
+        group: 'root',
+        mode: '0644'
       )
     end
 

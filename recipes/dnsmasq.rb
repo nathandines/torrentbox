@@ -4,6 +4,8 @@
 #
 # Copyright:: 2018, Nathan Dines, All Rights Reserved.
 
+vpn_provider = node['torrentbox']['openvpn']['provider']
+
 package 'dnsmasq'
 
 template '/etc/dnsmasq.conf' do
@@ -16,7 +18,7 @@ template '/etc/dnsmasq.conf' do
   variables(
     local_dns:    node['torrentbox']['local_dns'],
     vpn_dns:      node['torrentbox']['vpn_dns'],
-    vpn_hostname: node['torrentbox']['vpn_hostname']
+    vpn_domain:   node['torrentbox']['openvpn']['providers'][vpn_provider]['domain']
   )
 end
 

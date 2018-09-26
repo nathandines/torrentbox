@@ -31,8 +31,26 @@ describe 'torrentbox::default' do
       expect(chef_run).to include_recipe('torrentbox::system_services')
     end
 
+    it 'includes `torrentbox::openvpn` recipe' do
+      expect(chef_run).to include_recipe('torrentbox::openvpn')
+    end
+
     it 'includes `torrentbox::iptables` recipe' do
       expect(chef_run).to include_recipe('torrentbox::iptables')
+    end
+  end
+
+  context 'With the VPN disabled, on an Debian 9.4' do
+    let(:chef_run) do
+      # for a complete list of available platforms and versions see:
+      # https://github.com/customink/fauxhai/blob/master/PLATFORMS.md
+      runner = ChefSpec::ServerRunner.new(platform: 'debian', version: '9.4')
+      runner.node.normal['torrentbox']['vpn_enabled'] = false
+      runner.converge(described_recipe)
+    end
+
+    it 'must not include `torrentbox::openvpn` recipe' do
+      expect(chef_run).to_not include_recipe('torrentbox::openvpn')
     end
   end
 end

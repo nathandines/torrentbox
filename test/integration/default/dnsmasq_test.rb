@@ -10,10 +10,13 @@ end
 describe file('/etc/dnsmasq.conf') do
   it { should be_file }
   its('content') { should match(/^# Chef Template: v0\.1$/) }
-  its('content') { should match('^server=/pool\.ntp\.org/nil\.nathandines\.com/8\.8\.8\.8$') }
-  its('content') { should match('^server=/pool\.ntp\.org/nil\.nathandines\.com/8\.8\.4\.4$') }
+  its('content') { should match('^server=/pool\.ntp\.org/privateinternetaccess\.com/8\.8\.8\.8$') }
+  its('content') { should match('^server=/pool\.ntp\.org/privateinternetaccess\.com/8\.8\.4\.4$') }
   its('content') { should match('^server=1\.1\.1\.1$') }
   its('content') { should match('^server=1\.0\.0\.1$') }
+  its('owner') { should eq 'root' }
+  its('group') { should eq 'root' }
+  its('mode') { should cmp '0644' }
 end
 
 describe service('dnsmasq') do

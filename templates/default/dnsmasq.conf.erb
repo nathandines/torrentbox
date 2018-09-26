@@ -6,7 +6,7 @@ domain-needed
 no-resolv
 no-poll
 <% @local_dns.each do |server| -%>
-server=/pool.ntp.org/<%= @vpn_hostname %>/<%= server %>
+server=/pool.ntp.org/<%= @vpn_domain %>/<%= server %>
 <% end -%>
 no-hosts
 <% @vpn_dns.each do |server| -%>

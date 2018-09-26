@@ -31,6 +31,14 @@ describe file('/usr/local/sbin/asymmetric_routing.sh') do
   its('mode') { should cmp '0755' }
 end
 
+describe command('ip route show table 200') do
+  its('stdout') { should_not eq '' }
+end
+
+describe command('ip rule show table 200') do
+  its('stdout') { should_not eq '' }
+end
+
 # Only the system-level dhclient daemon should be running, not the one for the
 # eth0 interface
 describe command('pgrep -f \'^/sbin/dhclient -4 -v -pf /run/dhclient.eth0.pid -lf /var/lib/dhcp/dhclient.eth0.leases -I -df /var/lib/dhcp/dhclient6.eth0.leases eth0$\'') do

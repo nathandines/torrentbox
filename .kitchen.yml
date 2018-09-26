@@ -43,9 +43,9 @@ suites:
     verifier:
       inspec_tests:
         - test/integration/novpn
-    lifecycle:
-      post_converge:
-        - local: sleep 20
+    # lifecycle:
+    #   post_converge:
+    #     - local: sleep 20
     attributes:
       torrentbox:
         <<: *torrentbox_attributes

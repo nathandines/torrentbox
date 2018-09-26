@@ -51,5 +51,20 @@ describe 'torrentbox::netconfig' do
     it 'should not reload the network without a trigger' do
       expect(chef_run).to_not run_execute('reload_network')
     end
+
+    it 'has a script to configure asymmetric routing' do
+      expect(chef_run).to create_cookbook_file('/usr/local/sbin/asymmetric_routing.sh').with(
+        mode: '0755',
+        owner: 'root',
+        group: 'root',
+        source: 'networking/asymmetric_routing.sh'
+      )
+    end
+
+    it 'reloads the network on an asymmetric routing script change' do
+      expect(chef_run.cookbook_file('/usr/local/sbin/asymmetric_routing.sh'))
+        .to notify('execute[reload_network]')
+        .to(:run).delayed
+    end
   end
 end

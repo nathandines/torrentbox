@@ -9,6 +9,8 @@ default_ifaddress = node['ipaddress']
 default_ifmask    = node['network']['interfaces'][default_ifname]['addresses'][default_ifaddress]['netmask']
 default_ifgw      = node['network']['default_gateway']
 
+asymmetric_routing_script = '/usr/local/sbin/asymmetric_routing.sh'
+
 file '/etc/sysctl.d/40-ipv6.conf' do
   action   :create
   owner    'root'
@@ -23,6 +25,15 @@ execute 'sysctl_refresh' do
   command 'sysctl --system'
 end
 
+cookbook_file asymmetric_routing_script do
+  action :create
+  owner  'root'
+  group  'root'
+  mode   '0755'
+  source 'networking/asymmetric_routing.sh'
+  notifies :run, 'execute[reload_network]', :delayed
+end
+
 template '/etc/network/interfaces' do
   action :create
   owner  'root'
@@ -33,7 +44,8 @@ template '/etc/network/interfaces' do
     ifname: default_ifname,
     ifaddress: default_ifaddress,
     ifmask: default_ifmask,
-    ifgw: default_ifgw
+    ifgw: default_ifgw,
+    asymmetric_routing_script: asymmetric_routing_script
   )
   notifies :run, 'execute[reload_network]', :delayed
 end

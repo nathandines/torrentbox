@@ -6,7 +6,8 @@ Repository which contains the code to deploy a VNC host for downloading torrents
 
 - Chef ~> 14.2
 - Inspec ~> 2.2
-- (Development) ChefDK ~> 3.1.0
+- (Development) ChefDK ~> 3.2.30
+  - Requires test-kitchen ~> 1.23.0 for lifecycle hooks
 
 ## Development
 

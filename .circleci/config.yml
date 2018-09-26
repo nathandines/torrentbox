@@ -3,7 +3,7 @@ version: 2
 jobs:
   test:
     docker:
-      - image: chef/chefdk:3.1
+      - image: chef/chefdk:3.2.30
     environment:
       KITCHEN_LOCAL_YAML: .kitchen.ec2.yml
     steps:

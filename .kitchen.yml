@@ -14,6 +14,10 @@ verifier:
 platforms:
   - name: debian-9
 
+lifecycle:
+  post_converge:
+    - local: sleep 30
+
 suites:
   - name: default
     run_list:
@@ -21,6 +25,9 @@ suites:
     verifier:
       inspec_tests:
         - test/integration/default
+    lifecycle:
+      post_converge:
+        - local: sleep 20
     attributes:
       torrentbox: &torrentbox_attributes
         iptables:
@@ -36,6 +43,9 @@ suites:
     verifier:
       inspec_tests:
         - test/integration/novpn
+    lifecycle:
+      post_converge:
+        - local: sleep 20
     attributes:
       torrentbox:
         <<: *torrentbox_attributes

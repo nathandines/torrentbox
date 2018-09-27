@@ -31,6 +31,10 @@ describe 'torrentbox::default' do
       expect(chef_run).to include_recipe('torrentbox::system_services')
     end
 
+    it 'includes `torrentbox::remote_access` recipe' do
+      expect(chef_run).to include_recipe('torrentbox::remote_access')
+    end
+
     it 'includes `torrentbox::openvpn` recipe' do
       expect(chef_run).to include_recipe('torrentbox::openvpn')
     end

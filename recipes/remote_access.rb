@@ -4,4 +4,6 @@
 #
 # Copyright:: 2018, Nathan Dines, All Rights Reserved.
 
-package 'tigervnc-standalone-server'
+%w(tigervnc-standalone-server openbox fonts-dejavu).each do |package_name|
+  package package_name
+end

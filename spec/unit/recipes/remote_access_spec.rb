@@ -19,8 +19,10 @@ describe 'torrentbox::remote_access' do
       expect { chef_run }.to_not raise_error
     end
 
-    it 'installs `tigervnc-standalone-server`' do
-      expect(chef_run).to install_package('tigervnc-standalone-server')
+    %w(tigervnc-standalone-server openbox fonts-dejavu).each do |package_name|
+      it "installs `#{package_name}`" do
+        expect(chef_run).to install_package(package_name)
+      end
     end
   end
 end

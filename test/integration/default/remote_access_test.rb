@@ -3,6 +3,8 @@
 # The Inspec reference, with examples and extensive documentation, can be
 # found at http://inspec.io/docs/reference/resources/
 
-describe package('tigervnc-standalone-server') do
-  it { should be_installed }
+%w(tigervnc-standalone-server openbox fonts-dejavu).each do |package_name|
+  describe package(package_name) do
+    it { should be_installed }
+  end
 end

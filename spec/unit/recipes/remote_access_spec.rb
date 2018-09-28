@@ -112,5 +112,9 @@ describe 'torrentbox::remote_access' do
         .to notify('service[vncserver@:1]')
         .to(:restart).delayed
     end
+
+    it 'service `vncserver@:1` should do nothing by default' do
+      expect(chef_run.service('vncserver@:1')).to do_nothing
+    end
   end
 end

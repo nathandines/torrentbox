@@ -1,4 +1,4 @@
 #!/bin/sh
 
 openbox-session &
-firefox-esr <% @homepages.each do |page| %> '<%= page %>'<% end %>
+firefox-esr <% @homepages.each do |page| %> '<%= page %>'<% end %> > /dev/null 2>&1

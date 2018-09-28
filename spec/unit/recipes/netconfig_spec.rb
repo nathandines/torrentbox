@@ -39,7 +39,35 @@ describe 'torrentbox::netconfig' do
     end
 
     it 'configure static IP addressing on the filesystem' do
-      expect(chef_run).to create_template('/etc/network/interfaces')
+      expect(chef_run).to create_template('/etc/network/interfaces').with(
+        owner: 'root',
+        group: 'root',
+        mode: '0644',
+        source: 'networking/interfaces.erb',
+        variables: {
+          asymmetric_routing_script: '/usr/local/sbin/asymmetric_routing.sh',
+          dynamic_configuration: false,
+          ifaddress: '10.0.0.2',
+          ifgw: '10.0.0.1',
+          ifmask: '255.255.255.0',
+          ifname: 'eth0',
+        }
+      )
+    end
+
+    it 'must have a static IP addressing configuration' do
+      expect(chef_run).to render_file('/etc/network/interfaces').with_content(
+        <<-NETCONFIG.gsub(/^\s{8}/, '')
+        # The primary network interface
+        auto eth0
+        iface eth0 inet static
+            address  10.0.0.2
+            netmask  255.255.255.0
+            gateway  10.0.0.1
+            post-up  /usr/local/sbin/asymmetric_routing.sh up 200
+            pre-down /usr/local/sbin/asymmetric_routing.sh down 200
+        NETCONFIG
+      )
     end
 
     it 'restart the default network interface on reconfiguration' do
@@ -65,6 +93,29 @@ describe 'torrentbox::netconfig' do
       expect(chef_run.cookbook_file('/usr/local/sbin/asymmetric_routing.sh'))
         .to notify('execute[reload_network]')
         .to(:run).delayed
+    end
+  end
+
+  context 'with dynamic IP addressing, on an Debian 9.4' do
+    let(:chef_run) do
+      # for a complete list of available platforms and versions see:
+      # https://github.com/customink/fauxhai/blob/master/PLATFORMS.md
+      runner = ChefSpec::ServerRunner.new(platform: 'debian', version: '9.4')
+      runner.node.normal['torrentbox']['netconfig']['dynamic_configuration'] = true
+      runner.converge(described_recipe)
+    end
+
+    it 'must have a dynamic IP addressing configuration' do
+      expect(chef_run).to render_file('/etc/network/interfaces').with_content(
+        <<-NETCONFIG.gsub(/^\s{8}/, '')
+        # The primary network interface
+        auto eth0
+        allow-hotplug eth0
+        iface eth0 inet dhcp
+            post-up  /usr/local/sbin/asymmetric_routing.sh up 200
+            pre-down /usr/local/sbin/asymmetric_routing.sh down 200
+        NETCONFIG
+      )
     end
   end
 end

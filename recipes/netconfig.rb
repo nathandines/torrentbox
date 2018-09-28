@@ -45,7 +45,8 @@ template '/etc/network/interfaces' do
     ifaddress: default_ifaddress,
     ifmask: default_ifmask,
     ifgw: default_ifgw,
-    asymmetric_routing_script: asymmetric_routing_script
+    asymmetric_routing_script: asymmetric_routing_script,
+    dynamic_configuration: node['torrentbox']['netconfig']['dynamic_configuration']
   )
   notifies :run, 'execute[reload_network]', :delayed
 end

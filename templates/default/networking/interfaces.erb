@@ -11,9 +11,14 @@ iface lo inet loopback
 
 # The primary network interface
 auto <%= @ifname %>
+<% if @dynamic_configuration -%>
+allow-hotplug <%= @ifname %>
+iface <%= @ifname %> inet dhcp
+<% else -%>
 iface <%= @ifname %> inet static
     address  <%= @ifaddress %>
     netmask  <%= @ifmask %>
     gateway  <%= @ifgw %>
+<% end -%>
     post-up  <%= @asymmetric_routing_script %> up 200
     pre-down <%= @asymmetric_routing_script %> down 200

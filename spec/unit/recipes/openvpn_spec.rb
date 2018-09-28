@@ -45,7 +45,8 @@ describe 'torrentbox::openvpn' do
         content: "username_undefined\npassword_undefined",
         owner: 'root',
         group: 'root',
-        mode: '0600'
+        mode: '0600',
+        sensitive: true
       )
     end
 

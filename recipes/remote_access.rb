@@ -31,6 +31,7 @@ cookbook_file "#{user_home}/.config/openbox/rc.xml" do
   owner  remote_access_user
   group  remote_access_user
   mode   '0644'
+  notifies :restart, 'service[vncserver@:1]', :delayed
 end
 
 directory "#{user_home}/.vnc" do
@@ -45,7 +46,38 @@ template "#{user_home}/.vnc/Xvnc-session" do
   group  remote_access_user
   mode   '0755'
   variables(
-    remote_access_user: remote_access_user,
     homepages: node['torrentbox']['remote_access']['homepages']
   )
+  notifies :restart, 'service[vncserver@:1]', :delayed
+end
+
+systemd_unit 'vncserver@:1.service' do
+  action %i(create enable)
+  content <<-UNIT_DEFINITION.gsub(/^\s+/, '')
+  [Unit]
+  Description=Remote desktop service (VNC)
+  After=syslog.target network.target
+
+  [Service]
+  Type=simple
+  User=#{remote_access_user}
+  PAMName=login
+  PIDFile=/home/%u/.vnc/%H%i.pid
+  Restart=always
+  RestartSec=5
+
+  # Clean any existing files in /tmp/.X11-unix environment
+  ExecStartPre=/bin/sh -c '/usr/bin/vncserver -kill %i > /dev/null 2>&1 || true'
+  ExecStart=/usr/bin/vncserver -geometry 1440x900 -fg -alwaysshared -localhost -SecurityTypes None %i
+  ExecStop=/bin/sh -c '/usr/bin/vncserver -kill %i || true'
+
+  [Install]
+  WantedBy=multi-user.target
+  UNIT_DEFINITION
+  notifies :stop, 'service[vncserver@:1]', :before
+  notifies :restart, 'service[vncserver@:1]', :delayed
+end
+
+service 'vncserver@:1' do
+  action :nothing
 end

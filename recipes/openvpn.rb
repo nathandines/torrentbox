@@ -21,12 +21,13 @@ template '/etc/openvpn/client.conf' do
 end
 
 file '/etc/openvpn/credentials' do
-  action   :create
-  content  [node['torrentbox']['openvpn']['username'], node['torrentbox']['openvpn']['password']].join("\n")
-  owner    'root'
-  group    'root'
-  mode     '0600'
-  notifies :restart, 'service[openvpn@client]', :delayed
+  action    :create
+  content   [node['torrentbox']['openvpn']['username'], node['torrentbox']['openvpn']['password']].join("\n")
+  owner     'root'
+  group     'root'
+  mode      '0600'
+  sensitive true
+  notifies  :restart, 'service[openvpn@client]', :delayed
 end
 
 service 'openvpn@client' do

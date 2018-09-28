@@ -59,13 +59,13 @@ describe 'torrentbox::remote_access' do
       )
     end
 
-    # it 'restarts the `tigervnc` service on openbox config change' do
-    #   expect(chef_run.template('/home/torrentbox/.openbox/rc.xml'))
-    #     .to notify('service[tigervnc]')
-    #     .to(:restart).delayed
-    # end
+    it 'restarts the `vncserver@:1` service on openbox config change' do
+      expect(chef_run.cookbook_file('/home/torrentbox/.config/openbox/rc.xml'))
+        .to notify('service[vncserver@:1]')
+        .to(:restart).delayed
+    end
 
-    it 'the tigervnc configuration directory `~torrentbox/.vnc`' do
+    it 'the vncserver configuration directory `~torrentbox/.vnc`' do
       expect(chef_run).to create_directory('/home/torrentbox/.vnc').with(
         owner: 'torrentbox',
         group: 'torrentbox',
@@ -73,14 +73,13 @@ describe 'torrentbox::remote_access' do
       )
     end
 
-    it 'configures the tigervnc session script `~torrentbox/.vnc/Xvnc-session`' do
+    it 'configures the vncserver session script `~torrentbox/.vnc/Xvnc-session`' do
       expect(chef_run).to create_template('/home/torrentbox/.vnc/Xvnc-session').with(
         source: 'tigervnc/Xvnc-session.erb',
         owner: 'torrentbox',
         group: 'torrentbox',
         mode: '0755',
         variables: {
-          remote_access_user: 'torrentbox',
           homepages: %w(
             http://localhost:9091
           ),
@@ -88,10 +87,30 @@ describe 'torrentbox::remote_access' do
       )
     end
 
-    # it 'restarts the `tigervnc` service on session script change' do
-    #   expect(chef_run.template('/home/torrentbox/.vnc/Xvnc-session'))
-    #     .to notify('service[tigervnc]')
-    #     .to(:restart).delayed
-    # end
+    it 'restarts the `vncserver@:1` service on session script change' do
+      expect(chef_run.template('/home/torrentbox/.vnc/Xvnc-session'))
+        .to notify('service[vncserver@:1]')
+        .to(:restart).delayed
+    end
+
+    it 'creates the `vncserver@:1` service' do
+      expect(chef_run).to create_systemd_unit('vncserver@:1.service')
+    end
+
+    it 'enables the `vncserver@:1` service' do
+      expect(chef_run).to enable_systemd_unit('vncserver@:1.service')
+    end
+
+    it 'stops the `vncserver@:1` service before systemd_unit change' do
+      expect(chef_run.systemd_unit('vncserver@:1.service'))
+        .to notify('service[vncserver@:1]')
+        .to(:stop).before
+    end
+
+    it 'restart the `vncserver@:1` service after systemd_unit change' do
+      expect(chef_run.systemd_unit('vncserver@:1.service'))
+        .to notify('service[vncserver@:1]')
+        .to(:restart).delayed
+    end
   end
 end

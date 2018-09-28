@@ -45,14 +45,14 @@ describe file('/home/torrentbox/.vnc/Xvnc-session') do
   its('mode') { should cmp '0755' }
 end
 
-# describe service('tigervnc') do
-#   it { should be_installed }
-#   it { should be_enabled }
-#   it { should be_running }
-# end
+describe service('vncserver@:1') do
+  it { should be_installed }
+  it { should be_enabled }
+  it { should be_running }
+end
 
-# describe processes('firefox-esr') do
-#   it { should exist }
-#   its('entries.length') { should eq 1 }
-#   its('users') { should eq ['torrentbox'] }
-# end
+describe processes('firefox-esr') do
+  it { should exist }
+  its('entries.length') { should eq 1 }
+  its('users') { should eq ['torrentbox'] }
+end

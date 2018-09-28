@@ -1,6 +1,4 @@
 #!/bin/sh
+
 openbox-session &
-while :; do
-  sleep 5
-  firefox-esr<% @homepages.each do |page| %> '<%= page %>'<% end %>
-done
+firefox-esr <% @homepages.each do |page| %> '<%= page %>'<% end %>

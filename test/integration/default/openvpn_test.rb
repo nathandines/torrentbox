@@ -11,14 +11,14 @@ describe file('/etc/openvpn/client.conf') do
   it { should be_file }
   its('owner') { should eq 'root' }
   its('group') { should eq 'root' }
-  its('mode') { should cmp '0644' }
+  its('mode') { should cmp '00644' }
 end
 
 describe file('/etc/openvpn/credentials') do
   it { should be_file }
   its('owner') { should eq 'root' }
   its('group') { should eq 'root' }
-  its('mode') { should cmp '0600' }
+  its('mode') { should cmp '00600' }
 end
 
 describe service('openvpn@client') do

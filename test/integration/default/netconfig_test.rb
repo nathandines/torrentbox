@@ -7,7 +7,7 @@ describe file('/etc/sysctl.d/40-ipv6.conf') do
   it { should be_file }
   its('owner') { should eq 'root' }
   its('group') { should eq 'root' }
-  its('mode') { should cmp '0644' }
+  its('mode') { should cmp '00644' }
   its('content') { should eq 'net.ipv6.conf.all.disable_ipv6 = 1' }
 end
 
@@ -21,14 +21,14 @@ describe file('/etc/network/interfaces') do
   its('content') { should match(/^# Chef Template: v0\.1$/) }
   its('owner') { should eq 'root' }
   its('group') { should eq 'root' }
-  its('mode') { should cmp '0644' }
+  its('mode') { should cmp '00644' }
 end
 
 describe file('/usr/local/sbin/asymmetric_routing.sh') do
   it { should be_file }
   its('owner') { should eq 'root' }
   its('group') { should eq 'root' }
-  its('mode') { should cmp '0755' }
+  its('mode') { should cmp '00755' }
 end
 
 describe command('ip route show table 200') do

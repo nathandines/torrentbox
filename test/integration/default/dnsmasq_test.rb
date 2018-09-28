@@ -16,7 +16,7 @@ describe file('/etc/dnsmasq.conf') do
   its('content') { should match('^server=1\.0\.0\.1$') }
   its('owner') { should eq 'root' }
   its('group') { should eq 'root' }
-  its('mode') { should cmp '0644' }
+  its('mode') { should cmp '00644' }
 end
 
 describe service('dnsmasq') do

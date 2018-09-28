@@ -20,7 +20,7 @@ end
     it { should be_directory }
     its('owner') { should eq 'torrentbox' }
     its('group') { should eq 'torrentbox' }
-    its('mode') { should cmp '0755' }
+    its('mode') { should cmp '00755' }
   end
 end
 
@@ -28,21 +28,21 @@ describe file('/home/torrentbox/.config/openbox/rc.xml') do
   it { should be_file }
   its('owner') { should eq 'torrentbox' }
   its('group') { should eq 'torrentbox' }
-  its('mode') { should cmp '0644' }
+  its('mode') { should cmp '00644' }
 end
 
 describe file('/home/torrentbox/.vnc') do
   it { should be_directory }
   its('owner') { should eq 'torrentbox' }
   its('group') { should eq 'torrentbox' }
-  its('mode') { should cmp '0755' }
+  its('mode') { should cmp '00755' }
 end
 
 describe file('/home/torrentbox/.vnc/Xvnc-session') do
   it { should be_file }
   its('owner') { should eq 'torrentbox' }
   its('group') { should eq 'torrentbox' }
-  its('mode') { should cmp '0755' }
+  its('mode') { should cmp '00755' }
 end
 
 describe service('vncserver@:1') do
@@ -68,12 +68,12 @@ describe file('/home/torrentbox/.ssh') do
   it { should be_directory }
   its('owner') { should eq 'torrentbox' }
   its('group') { should eq 'torrentbox' }
-  its('mode') { should cmp '0700' }
+  its('mode') { should cmp '00700' }
 end
 
 describe file('/home/torrentbox/.ssh/authorized_keys') do
   it { should be_file }
   its('owner') { should eq 'torrentbox' }
   its('group') { should eq 'torrentbox' }
-  its('mode') { should cmp '0600' }
+  its('mode') { should cmp '00600' }
 end

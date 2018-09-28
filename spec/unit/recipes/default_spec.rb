@@ -26,6 +26,7 @@ describe 'torrentbox::default' do
       openvpn
       remote_access
       system_services
+      transmission
     )
 
     cookbook_recipes.each do |recipe|

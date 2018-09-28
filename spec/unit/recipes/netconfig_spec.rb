@@ -70,14 +70,20 @@ describe 'torrentbox::netconfig' do
       )
     end
 
-    it 'restart the default network interface on reconfiguration' do
+    it 'stop the networking service before reconfiguration' do
       expect(chef_run.template('/etc/network/interfaces'))
-        .to notify('execute[reload_network]')
-        .to(:run).delayed
+        .to notify('service[networking]')
+        .to(:stop).before
+    end
+
+    it 'start the networking service after reconfiguration' do
+      expect(chef_run.template('/etc/network/interfaces'))
+        .to notify('service[networking]')
+        .to(:start).immediately
     end
 
     it 'should not reload the network without a trigger' do
-      expect(chef_run).to_not run_execute('reload_network')
+      expect(chef_run.service('networking')).to do_nothing
     end
 
     it 'has a script to configure asymmetric routing' do
@@ -89,10 +95,16 @@ describe 'torrentbox::netconfig' do
       )
     end
 
-    it 'reloads the network on an asymmetric routing script change' do
+    it 'stop the network before an asymmetric routing script change' do
       expect(chef_run.cookbook_file('/usr/local/sbin/asymmetric_routing.sh'))
-        .to notify('execute[reload_network]')
-        .to(:run).delayed
+        .to notify('service[networking]')
+        .to(:stop).before
+    end
+
+    it 'start the network after an asymmetric routing script change' do
+      expect(chef_run.cookbook_file('/usr/local/sbin/asymmetric_routing.sh'))
+        .to notify('service[networking]')
+        .to(:start).immediately
     end
   end
 

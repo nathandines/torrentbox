@@ -31,7 +31,8 @@ cookbook_file asymmetric_routing_script do
   group  'root'
   mode   '0755'
   source 'networking/asymmetric_routing.sh'
-  notifies :run, 'execute[reload_network]', :delayed
+  notifies :stop, 'service[networking]', :before
+  notifies :start, 'service[networking]', :immediately
 end
 
 template '/etc/network/interfaces' do
@@ -48,10 +49,10 @@ template '/etc/network/interfaces' do
     asymmetric_routing_script: asymmetric_routing_script,
     dynamic_configuration: node['torrentbox']['netconfig']['dynamic_configuration']
   )
-  notifies :run, 'execute[reload_network]', :delayed
+  notifies :stop, 'service[networking]', :before
+  notifies :start, 'service[networking]', :immediately
 end
 
-execute 'reload_network' do # ~FC004
+service 'networking' do
   action :nothing
-  command "systemctl stop ifup@#{default_ifname}; ifdown #{default_ifname}; ifup #{default_ifname}"
 end

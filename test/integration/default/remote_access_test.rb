@@ -51,6 +51,13 @@ describe service('vncserver@:1') do
   it { should be_running }
 end
 
+describe port(5901) do
+  it { should be_listening }
+  its('processes') { should cmp 'Xtigervnc' }
+  its('protocols') { should cmp 'tcp' }
+  its('addresses') { should cmp '127.0.0.1' }
+end
+
 describe processes('firefox-esr') do
   it { should exist }
   its('entries.length') { should eq 1 }

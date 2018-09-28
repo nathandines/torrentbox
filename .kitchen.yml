@@ -33,6 +33,9 @@ suites:
         openvpn:
           username: <%= ENV['OPENVPN_USERNAME'] %>
           password: <%= ENV['OPENVPN_PASSWORD'] %>
+        remote_access:
+          ssh_authorized_keys:
+            - <%= ENV['KITCHEN_SSH_PUBLIC_KEY'] %>
   - name: novpn
     run_list:
       - recipe[torrentbox::default]

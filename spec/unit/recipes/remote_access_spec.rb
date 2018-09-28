@@ -65,7 +65,7 @@ describe 'torrentbox::remote_access' do
         .to(:restart).delayed
     end
 
-    it 'the vncserver configuration directory `~torrentbox/.vnc`' do
+    it 'creates the vncserver configuration directory `~torrentbox/.vnc`' do
       expect(chef_run).to create_directory('/home/torrentbox/.vnc').with(
         owner: 'torrentbox',
         group: 'torrentbox',
@@ -113,8 +113,49 @@ describe 'torrentbox::remote_access' do
         .to(:restart).delayed
     end
 
-    it 'service `vncserver@:1` should do nothing by default' do
+    it 'must do nothing for the service `vncserver@:1` by default' do
       expect(chef_run.service('vncserver@:1')).to do_nothing
+    end
+
+    it "must create the torrentbox user's `.ssh` directory" do
+      expect(chef_run).to create_directory('/home/torrentbox/.ssh').with(
+        owner: 'torrentbox',
+        group: 'torrentbox',
+        mode: '0700'
+      )
+    end
+
+    it 'must have ssh keys available to the torrentbox user' do
+      expect(chef_run).to create_file('/home/torrentbox/.ssh/authorized_keys').with(
+        owner: 'torrentbox',
+        group: 'torrentbox',
+        mode: '0600',
+        content: ''
+      )
+    end
+  end
+
+  context 'with multiple SSH keys configured, on an Debian 9.4' do
+    ssh_keys = [
+      'ssh-rsa AAAAB3NzaC1yc2EAAAA bob.loblaw@bobloblawlawblog.com',
+      'ssh-rsa BBBBB3NzaC1yc2EAAAA www.creedthoughts.gov.www\creedthoughts',
+    ]
+
+    let(:chef_run) do
+      # for a complete list of available platforms and versions see:
+      # https://github.com/customink/fauxhai/blob/master/PLATFORMS.md
+      runner = ChefSpec::ServerRunner.new(platform: 'debian', version: '9.4')
+      runner.node.normal['torrentbox']['remote_access']['ssh_authorized_keys'] = ssh_keys
+      runner.converge(described_recipe)
+    end
+
+    it 'must have ssh keys available to the torrentbox user' do
+      expect(chef_run).to create_file('/home/torrentbox/.ssh/authorized_keys').with(
+        owner: 'torrentbox',
+        group: 'torrentbox',
+        mode: '0600',
+        content: ssh_keys.join("\n")
+      )
     end
   end
 end

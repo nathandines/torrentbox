@@ -63,3 +63,17 @@ describe processes('firefox-esr') do
   its('entries.length') { should eq 1 }
   its('users') { should eq ['torrentbox'] }
 end
+
+describe file('/home/torrentbox/.ssh') do
+  it { should be_directory }
+  its('owner') { should eq 'torrentbox' }
+  its('group') { should eq 'torrentbox' }
+  its('mode') { should cmp '0700' }
+end
+
+describe file('/home/torrentbox/.ssh/authorized_keys') do
+  it { should be_file }
+  its('owner') { should eq 'torrentbox' }
+  its('group') { should eq 'torrentbox' }
+  its('mode') { should cmp '0600' }
+end

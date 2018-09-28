@@ -81,3 +81,16 @@ end
 service 'vncserver@:1' do
   action :nothing
 end
+
+directory "#{user_home}/.ssh" do
+  owner remote_access_user
+  group remote_access_user
+  mode '0700'
+end
+
+file "#{user_home}/.ssh/authorized_keys" do
+  owner remote_access_user
+  group remote_access_user
+  mode '0600'
+  content node['torrentbox']['remote_access']['ssh_authorized_keys'].join("\n")
+end

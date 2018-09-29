@@ -12,7 +12,10 @@ describe 'torrentbox::dnsmasq' do
       # for a complete list of available platforms and versions see:
       # https://github.com/customink/fauxhai/blob/master/PLATFORMS.md
       runner = ChefSpec::ServerRunner.new(platform: 'debian', version: '9.4')
-      runner.converge(described_recipe)
+      runner.converge(
+        described_recipe,
+        'torrentbox::netconfig'
+      )
     end
 
     it 'converges successfully' do
@@ -52,6 +55,46 @@ describe 'torrentbox::dnsmasq' do
 
     it 'sets the system DNS server to `dnsmasq`' do
       expect(chef_run).to create_file('/etc/resolv.conf').with(
+        content: 'nameserver 127.0.0.1'
+      )
+    end
+
+    it 'reconfigures dhclient to use the local DNS server' do
+      expect(chef_run).to create_cookbook_file('/etc/dhcp/dhclient.conf').with(
+        mode: '0644',
+        owner: 'root',
+        group: 'root',
+        source: 'networking/dhclient.conf'
+      )
+    end
+
+    it 'stop the network before a dhclient.conf change' do
+      expect(chef_run.cookbook_file('/etc/dhcp/dhclient.conf'))
+        .to notify('service[networking]')
+        .to(:stop).before
+    end
+
+    it 'start the network after a dhclient.conf change' do
+      expect(chef_run.cookbook_file('/etc/dhcp/dhclient.conf'))
+        .to notify('service[networking]')
+        .to(:start).immediately
+    end
+  end
+
+  context 'with dynamic IP addressing, on an Debian 9.4' do
+    let(:chef_run) do
+      # for a complete list of available platforms and versions see:
+      # https://github.com/customink/fauxhai/blob/master/PLATFORMS.md
+      runner = ChefSpec::ServerRunner.new(platform: 'debian', version: '9.4')
+      runner.node.normal['torrentbox']['netconfig']['dynamic_configuration'] = true
+      runner.converge(
+        described_recipe,
+        'torrentbox::netconfig'
+      )
+    end
+
+    it 'does not set the system DNS server to `dnsmasq`' do
+      expect(chef_run).to_not create_file('/etc/resolv.conf').with(
         content: 'nameserver 127.0.0.1'
       )
     end

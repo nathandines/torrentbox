@@ -19,6 +19,10 @@ describe 'torrentbox::netconfig' do
       expect { chef_run }.to_not raise_error
     end
 
+    it 'installs `resolvconf`' do
+      expect(chef_run).to install_package('resolvconf')
+    end
+
     it 'has IPv6 disabled in sysctl configuration' do
       expect(chef_run).to create_file('/etc/sysctl.d/40-ipv6.conf').with(
         mode: '0644',
@@ -64,6 +68,7 @@ describe 'torrentbox::netconfig' do
             address  10.0.0.2
             netmask  255.255.255.0
             gateway  10.0.0.1
+            dns-nameservers 127.0.0.1
             post-up  /usr/local/sbin/asymmetric_routing.sh up 200
             pre-down /usr/local/sbin/asymmetric_routing.sh down 200
         NETCONFIG
@@ -124,6 +129,7 @@ describe 'torrentbox::netconfig' do
         auto eth0
         allow-hotplug eth0
         iface eth0 inet dhcp
+            dns-nameservers 127.0.0.1
             post-up  /usr/local/sbin/asymmetric_routing.sh up 200
             pre-down /usr/local/sbin/asymmetric_routing.sh down 200
         NETCONFIG

@@ -11,6 +11,8 @@ default_ifgw      = node['network']['default_gateway']
 
 asymmetric_routing_script = '/usr/local/sbin/asymmetric_routing.sh'
 
+package 'resolvconf'
+
 file '/etc/sysctl.d/40-ipv6.conf' do
   action   :create
   owner    'root'

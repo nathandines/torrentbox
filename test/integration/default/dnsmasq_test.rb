@@ -29,16 +29,3 @@ describe port(53) do
   it { should be_listening }
   its('addresses') { should cmp '127.0.0.1' }
 end
-
-describe file('/etc/resolv.conf') do
-  it { should be_file }
-  its('content') { should eq 'nameserver 127.0.0.1' }
-end
-
-describe file('/etc/dhcp/dhclient.conf') do
-  it { should be_file }
-  its('content') { should match(/^# Chef Template: v0\.1$/) }
-  its('owner') { should eq 'root' }
-  its('group') { should eq 'root' }
-  its('mode') { should cmp '00644' }
-end

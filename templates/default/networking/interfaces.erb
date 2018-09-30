@@ -20,5 +20,6 @@ iface <%= @ifname %> inet static
     netmask  <%= @ifmask %>
     gateway  <%= @ifgw %>
 <% end -%>
+    dns-nameservers 127.0.0.1
     post-up  <%= @asymmetric_routing_script %> up 200
     pre-down <%= @asymmetric_routing_script %> down 200

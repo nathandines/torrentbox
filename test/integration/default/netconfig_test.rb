@@ -3,6 +3,10 @@
 # The Inspec reference, with examples and extensive documentation, can be
 # found at http://inspec.io/docs/reference/resources/
 
+describe package('resolvconf') do
+  it { should be_installed }
+end
+
 describe file('/etc/sysctl.d/40-ipv6.conf') do
   it { should be_file }
   its('owner') { should eq 'root' }
@@ -22,6 +26,11 @@ describe file('/etc/network/interfaces') do
   its('owner') { should eq 'root' }
   its('group') { should eq 'root' }
   its('mode') { should cmp '00644' }
+end
+
+describe file('/etc/resolv.conf') do
+  it { should be_file }
+  its('content') { should match /^nameserver 127\.0\.0\.1$/ }
 end
 
 describe file('/usr/local/sbin/asymmetric_routing.sh') do

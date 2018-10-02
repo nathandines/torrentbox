@@ -37,7 +37,7 @@ template '/etc/transmission-daemon/settings.json' do
     download_path: download_path,
     torrent_watchdir_path: torrent_watchdir_path
   )
-  notifies :reload, 'service[transmission-daemon]', :delayed
+  notifies :reload, 'service[transmission-daemon]', :immediately
 end
 
 directory '/etc/systemd/system/transmission-daemon.service.d' do

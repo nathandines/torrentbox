@@ -56,7 +56,7 @@ describe 'torrentbox::transmission' do
     it 'reloads `transmission-daemon` upon reconfiguration' do
       expect(chef_run.template('/etc/transmission-daemon/settings.json'))
         .to notify('service[transmission-daemon]')
-        .to(:reload).delayed
+        .to(:reload).immediately
     end
 
     it 'creates the `transmission` service directory' do

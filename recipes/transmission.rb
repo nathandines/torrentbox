@@ -10,6 +10,15 @@ torrent_watchdir_path = "#{storage_parent}/torrents"
 
 package 'transmission-daemon'
 
+systemd_unit 'transmission-daemon.service' do
+  action :nothing
+end
+
+service 'transmission-daemon' do
+  supports restart: true, reload: true
+  action %i(enable start)
+end
+
 [download_path, torrent_watchdir_path].each do |this_directory|
   directory this_directory do
     owner 'debian-transmission'
@@ -48,13 +57,4 @@ file '/etc/systemd/system/transmission-daemon.service.d/mounts.conf' do
   notifies :stop, 'service[transmission-daemon]', :before
   notifies :reload, 'systemd_unit[transmission-daemon.service]', :immediately
   notifies :restart, 'service[transmission-daemon]', :delayed
-end
-
-service 'transmission-daemon' do
-  supports restart: true, reload: true
-  action %i(enable start)
-end
-
-systemd_unit 'transmission-daemon.service' do
-  action :nothing
 end

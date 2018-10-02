@@ -29,7 +29,7 @@ describe 'torrentbox::remote_access' do
       expect(chef_run).to create_user('torrentbox').with(
         comment: 'User for torrentbox remote access',
         manage_home: true,
-        shell: '/usr/sbin/nologin',
+        shell: '/bin/bash',
         home: '/home/torrentbox'
       )
     end

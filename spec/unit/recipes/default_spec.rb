@@ -27,6 +27,7 @@ describe 'torrentbox::default' do
       remote_access
       system_services
       transmission
+      fileshares
     )
 
     cookbook_recipes.each do |recipe|

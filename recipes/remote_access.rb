@@ -14,7 +14,7 @@ end
 user remote_access_user do
   comment     'User for torrentbox remote access'
   manage_home true
-  shell       '/usr/sbin/nologin'
+  shell       '/bin/bash'
   home        user_home
 end
 

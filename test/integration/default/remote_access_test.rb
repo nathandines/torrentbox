@@ -12,7 +12,7 @@ end
 describe user('torrentbox') do
   it { should exist }
   its('home') { should eq '/home/torrentbox' }
-  its('shell') { should eq '/usr/sbin/nologin' }
+  its('shell') { should eq '/bin/bash' }
 end
 
 %w(/home/torrentbox/.config /home/torrentbox/.config/openbox).each do |directory|

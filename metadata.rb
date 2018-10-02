@@ -10,6 +10,7 @@ chef_version '~> 14.2' if respond_to?(:chef_version)
 supports 'debian', '~> 9.4'
 
 depends 'iptables', '~> 4.4.1'
+depends 'samba', '~> 1.2.0'
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when

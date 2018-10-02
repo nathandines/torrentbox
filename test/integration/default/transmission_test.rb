@@ -11,7 +11,7 @@ describe file('/etc/transmission-daemon/settings.json') do
   it { should be_file }
   its('owner') { should eq 'debian-transmission' }
   its('group') { should eq 'debian-transmission' }
-  its('mode') { should cmp '00400' }
+  its('mode') { should cmp '00600' }
 end
 
 describe file('/var/lib/transmission-daemon/downloads') do
@@ -41,4 +41,8 @@ end
 
 describe port(51234) do
   it { should be_listening }
+end
+
+describe command('systemctl show transmission-daemon') do
+  its('stdout') { should match(%r{RequiresMountsFor=/var/lib/transmission-daemon}) }
 end

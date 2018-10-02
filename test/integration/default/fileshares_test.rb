@@ -7,16 +7,16 @@ describe package('samba') do
   it { should be_installed }
 end
 
-describe service('smbd') do
-  it { should be_installed }
-  it { should be_enabled }
-  it { should be_running }
-end
+%w(smbd nmbd).each do |this_service|
+  describe service(this_service) do
+    it { should be_installed }
+    it { should be_enabled }
+    it { should be_running }
+  end
 
-describe service('nmbd') do
-  it { should be_installed }
-  it { should be_enabled }
-  it { should be_running }
+  describe command("systemctl show #{this_service}") do
+    its('stdout') { should match(%r{RequiresMountsFor=/tmp/shareone /tmp/share\\x20two}) }
+  end
 end
 
 describe port(445) do

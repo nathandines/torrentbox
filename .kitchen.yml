@@ -36,6 +36,11 @@ suites:
         remote_access:
           ssh_authorized_keys:
             - <%= ENV['KITCHEN_SSH_PUBLIC_KEY'] %>
+        fileshares:
+          - name: Share One
+            path: /tmp/shareone
+          - name: Share Two
+            path: /tmp/share two
   - name: novpn
     run_list:
       - recipe[torrentbox::default]

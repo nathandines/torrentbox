@@ -22,62 +22,40 @@ node['torrentbox']['fileshares'].each do |samba_share|
   end
 end
 
-systemd_unit 'smbd.service' do
-  action %i(create enable)
-  content <<-UNIT_DEFINITION.gsub(/^\s+/, '')
-  [Unit]
-  Description=Samba SMB Daemon
-  Documentation=man:smbd(8) man:samba(7) man:smb.conf(5)
-  After=network.target nmbd.service winbind.service
-  RequiresMountsFor='#{node['torrentbox']['fileshares'].map { |x| x['path'] }.join("' '")}'
+%w(smbd nmbd).each do |this_service|
+  directory "/etc/systemd/system/#{this_service}.service.d" do
+    owner 'root'
+    group 'root'
+    mode  '0755'
+  end
 
-  [Service]
-  Type=notify
-  NotifyAccess=all
-  PIDFile=/var/run/samba/smbd.pid
-  LimitNOFILE=16384
-  EnvironmentFile=-/etc/default/samba
-  ExecStart=/usr/sbin/smbd $SMBDOPTIONS
-  ExecReload=/bin/kill -HUP $MAINPID
-  LimitCORE=infinity
+  if !node['torrentbox']['fileshares'].empty?
+    file "/etc/systemd/system/#{this_service}.service.d/mounts.conf" do
+      action :create
+      owner 'root'
+      group 'root'
+      mode  '0644'
+      content <<-UNIT_DEFINITION.gsub(/^\s+/, '')
+      [Unit]
+      RequiresMountsFor='#{node['torrentbox']['fileshares'].map { |x| x['path'] }.join("' '")}'
+      UNIT_DEFINITION
+      notifies :stop, "service[#{this_service}]", :before
+      notifies :restart, "service[#{this_service}]", :delayed
+    end
+  else
+    file "/etc/systemd/system/#{this_service}.service.d/mounts.conf" do
+      action :delete
+      notifies :stop, "service[#{this_service}]", :before
+      notifies :reload, "systemd_unit[#{this_service}.service]", :immediately
+      notifies :restart, "service[#{this_service}]", :delayed
+    end
+  end
 
-  [Install]
-  WantedBy=multi-user.target
-  UNIT_DEFINITION
-  notifies :stop, 'service[smbd]', :before
-  notifies :restart, 'service[smbd]', :delayed
-end
+  service this_service do
+    action %i(enable start)
+  end
 
-systemd_unit 'nmbd.service' do
-  action %i(create enable)
-  content <<-UNIT_DEFINITION.gsub(/^\s+/, '')
-  [Unit]
-  Description=Samba NMB Daemon
-  Documentation=man:nmbd(8) man:samba(7) man:smb.conf(5)
-  After=network-online.target
-  Wants=network-online.target
-  RequiresMountsFor='#{node['torrentbox']['fileshares'].map { |x| x['path'] }.join("' '")}'
-
-  [Service]
-  Type=notify
-  NotifyAccess=all
-  PIDFile=/var/run/samba/nmbd.pid
-  EnvironmentFile=-/etc/default/samba
-  ExecStart=/usr/sbin/nmbd $NMBDOPTIONS
-  ExecReload=/bin/kill -HUP $MAINPID
-  LimitCORE=infinity
-
-  [Install]
-  WantedBy=multi-user.target
-  UNIT_DEFINITION
-  notifies :stop, 'service[nmbd]', :before
-  notifies :restart, 'service[nmbd]', :delayed
-end
-
-service 'smbd' do
-  action :nothing
-end
-
-service 'nmbd' do
-  action :nothing
+  systemd_unit "#{this_service}.service" do
+    action :nothing
+  end
 end

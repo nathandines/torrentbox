@@ -44,7 +44,7 @@ describe 'torrentbox::transmission' do
         source: 'transmission/settings.json.erb',
         owner: 'debian-transmission',
         group: 'debian-transmission',
-        mode:  '0400',
+        mode:  '0600',
         variables: {
           transmission_port: 51234,
           download_path: '/var/lib/transmission-daemon/downloads',
@@ -67,17 +67,34 @@ describe 'torrentbox::transmission' do
       )
     end
 
-    it 'creates the `transmission-daemon` service' do
+    it 'creates the `transmission-daemon` service mount dependencies' do
       expect(chef_run).to create_file('/etc/systemd/system/transmission-daemon.service.d/mounts.conf').with(
-        content: <<-UNIT_DEFINITION.gsub(/^\s+/, '')
+        content: <<-UNIT_DEFINITION.gsub(/^\s+/, ''),
           [Unit]
           RequiresMountsFor='/var/lib/transmission-daemon'
           UNIT_DEFINITION
+        owner: 'root',
+        group: 'root',
+        mode:  '0644'
       )
     end
 
     it 'enables the `transmission-daemon` service' do
-      expect(chef_run).to enable_service('transmission-daemon')
+      expect(chef_run).to enable_service('transmission-daemon').with(
+        supports: {
+          restart: true,
+          reload: true,
+        }
+      )
+    end
+
+    it 'starts the `transmission-daemon` service' do
+      expect(chef_run).to start_service('transmission-daemon').with(
+        supports: {
+          restart: true,
+          reload: true,
+        }
+      )
     end
 
     it 'stops transmission-daemon before changing the systemd unit file' do
@@ -86,10 +103,20 @@ describe 'torrentbox::transmission' do
         .to(:stop).before
     end
 
+    it "reloads the transmission-daemon unit after changing the systemd unit file" do
+      expect(chef_run.file('/etc/systemd/system/transmission-daemon.service.d/mounts.conf'))
+        .to notify('systemd_unit[transmission-daemon.service]')
+        .to(:reload).immediately
+    end
+
     it 'restarts transmission-daemon after changing the systemd unit file' do
       expect(chef_run.file('/etc/systemd/system/transmission-daemon.service.d/mounts.conf'))
         .to notify('service[transmission-daemon]')
         .to(:restart).delayed
+    end
+
+    it 'shouldn\'t do anything with the `transmission-daemon` systemd_unit' do
+      expect(chef_run.systemd_unit('transmission-daemon.service')).to do_nothing
     end
   end
 end

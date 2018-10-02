@@ -60,8 +60,8 @@ end
 
 describe processes('firefox-esr') do
   it { should exist }
-  its('entries.length') { should eq 1 }
-  its('users') { should eq ['torrentbox'] }
+  # its('entries.length') { should eq 1 }
+  # its('users') { should eq ['torrentbox'] }
 end
 
 describe file('/home/torrentbox/.ssh') do

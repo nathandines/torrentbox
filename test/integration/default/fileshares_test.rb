@@ -32,8 +32,9 @@ describe file('/etc/samba/smb.conf') do
 end
 
 describe file('/etc/samba/smb.conf') do
-  its('content') { should match(/workgroup = WORKSPACE/) }
+  its('content') { should match(/workgroup = WORKGROUP/) }
   its('content') { should match(/security = user/) }
+  its('content') { should match(%r{hosts allow = 127\.0\.0\.0/8 10\.0\.0\.0/8 172\.16\.0\.0/12 192\.168\.0\.0/16}) }
   its('content') { should match(/map to guest = Bad User/) }
   its('content') { should match(/interfaces = eth0/) }
   its('content') { should match(/load printers = no/) }

@@ -46,7 +46,7 @@ describe 'torrentbox::netconfig' do
       expect(chef_run).to create_template('/etc/network/interfaces').with(
         owner: 'root',
         group: 'root',
-        mode: '0644',
+        mode: '0600',
         source: 'networking/interfaces.erb',
         variables: {
           asymmetric_routing_script: '/usr/local/sbin/asymmetric_routing.sh',
@@ -55,6 +55,7 @@ describe 'torrentbox::netconfig' do
           ifgw: '10.0.0.1',
           ifmask: '255.255.255.0',
           ifname: 'eth0',
+          additional_default_interface_options: [],
         }
       )
     end
@@ -122,6 +123,24 @@ describe 'torrentbox::netconfig' do
       runner.converge(described_recipe)
     end
 
+    it 'configure dynamic IP addressing on the filesystem' do
+      expect(chef_run).to create_template('/etc/network/interfaces').with(
+        owner: 'root',
+        group: 'root',
+        mode: '0600',
+        source: 'networking/interfaces.erb',
+        variables: {
+          asymmetric_routing_script: '/usr/local/sbin/asymmetric_routing.sh',
+          dynamic_configuration: true,
+          ifaddress: '10.0.0.2',
+          ifgw: '10.0.0.1',
+          ifmask: '255.255.255.0',
+          ifname: 'eth0',
+          additional_default_interface_options: [],
+        }
+      )
+    end
+
     it 'must have a dynamic IP addressing configuration' do
       expect(chef_run).to render_file('/etc/network/interfaces').with_content(
         <<-NETCONFIG.gsub(/^\s{8}/, '')
@@ -132,6 +151,58 @@ describe 'torrentbox::netconfig' do
             dns-nameservers 127.0.0.1
             post-up  /usr/local/sbin/asymmetric_routing.sh up 200
             pre-down /usr/local/sbin/asymmetric_routing.sh down 200
+        NETCONFIG
+      )
+    end
+  end
+
+  context 'with additional default interface options, on an Debian 9.4' do
+    let(:chef_run) do
+      # for a complete list of available platforms and versions see:
+      # https://github.com/customink/fauxhai/blob/master/PLATFORMS.md
+      runner = ChefSpec::ServerRunner.new(platform: 'debian', version: '9.4')
+      runner.node.normal['torrentbox']['netconfig']['additional_default_interface_options'] = [
+        '# this is one option',
+        '# this is another option',
+      ]
+      runner.converge(described_recipe)
+    end
+
+    it 'configure additional default network interface options on the filesystem' do
+      expect(chef_run).to create_template('/etc/network/interfaces').with(
+        owner: 'root',
+        group: 'root',
+        mode: '0600',
+        source: 'networking/interfaces.erb',
+        variables: {
+          asymmetric_routing_script: '/usr/local/sbin/asymmetric_routing.sh',
+          dynamic_configuration: false,
+          ifaddress: '10.0.0.2',
+          ifgw: '10.0.0.1',
+          ifmask: '255.255.255.0',
+          ifname: 'eth0',
+          additional_default_interface_options: [
+            '# this is one option',
+            '# this is another option',
+          ],
+        }
+      )
+    end
+
+    it 'must have additional options for the default interface' do
+      expect(chef_run).to render_file('/etc/network/interfaces').with_content(
+        <<-NETCONFIG.gsub(/^\s{8}/, '')
+        # The primary network interface
+        auto eth0
+        iface eth0 inet static
+            address  10.0.0.2
+            netmask  255.255.255.0
+            gateway  10.0.0.1
+            dns-nameservers 127.0.0.1
+            post-up  /usr/local/sbin/asymmetric_routing.sh up 200
+            pre-down /usr/local/sbin/asymmetric_routing.sh down 200
+            # this is one option
+            # this is another option
         NETCONFIG
       )
     end

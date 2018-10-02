@@ -23,3 +23,6 @@ iface <%= @ifname %> inet static
     dns-nameservers 127.0.0.1
     post-up  <%= @asymmetric_routing_script %> up 200
     pre-down <%= @asymmetric_routing_script %> down 200
+<% @additional_default_interface_options.each do |option_line| -%>
+    <%= option_line %>
+<% end -%>

@@ -41,7 +41,7 @@ template '/etc/network/interfaces' do
   action :create
   owner  'root'
   group  'root'
-  mode   '0644'
+  mode   '0600'
   source 'networking/interfaces.erb'
   variables(
     ifname: default_ifname,
@@ -49,7 +49,8 @@ template '/etc/network/interfaces' do
     ifmask: default_ifmask,
     ifgw: default_ifgw,
     asymmetric_routing_script: asymmetric_routing_script,
-    dynamic_configuration: node['torrentbox']['netconfig']['dynamic_configuration']
+    dynamic_configuration: node['torrentbox']['netconfig']['dynamic_configuration'],
+    additional_default_interface_options: node['torrentbox']['netconfig']['additional_default_interface_options']
   )
   notifies :stop, 'service[networking]', :before
   notifies :start, 'service[networking]', :immediately

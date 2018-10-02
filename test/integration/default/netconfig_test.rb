@@ -25,7 +25,7 @@ describe file('/etc/network/interfaces') do
   its('content') { should match(/^# Chef Template: v0\.1$/) }
   its('owner') { should eq 'root' }
   its('group') { should eq 'root' }
-  its('mode') { should cmp '00644' }
+  its('mode') { should cmp '00600' }
 end
 
 describe file('/etc/resolv.conf') do

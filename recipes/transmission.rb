@@ -31,28 +31,22 @@ template '/etc/transmission-daemon/settings.json' do
   notifies :reload, 'service[transmission-daemon]', :delayed
 end
 
-systemd_unit 'transmission-daemon.service' do
-  action %i(create enable)
+directory '/etc/systemd/system/transmission-daemon.service.d' do
+  owner 'root'
+  group 'root'
+  mode  '0755'
+end
+
+file '/etc/systemd/system/transmission-daemon.service.d/mounts.conf' do
   content <<-UNIT_DEFINITION.gsub(/^\s+/, '')
   [Unit]
-  Description=Transmission BitTorrent Daemon
-  After=network.target
   RequiresMountsFor='#{storage_parent}'
-
-  [Service]
-  User=debian-transmission
-  Type=notify
-  ExecStart=/usr/bin/transmission-daemon -f --log-error
-  ExecStop=/bin/kill -s STOP $MAINPID
-  ExecReload=/bin/kill -s HUP $MAINPID
-
-  [Install]
-  WantedBy=multi-user.target
   UNIT_DEFINITION
   notifies :stop, 'service[transmission-daemon]', :before
   notifies :restart, 'service[transmission-daemon]', :delayed
 end
 
 service 'transmission-daemon' do
-  action :nothing
+  supports restart: true, reload: true
+  action :enable
 end

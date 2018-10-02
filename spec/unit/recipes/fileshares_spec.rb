@@ -53,11 +53,11 @@ describe 'torrentbox::fileshares' do
           .to(:stop).before
       end
 
-    it "reloads the #{this_service} unit after changing the systemd unit file" do
-      expect(chef_run.file("/etc/systemd/system/#{this_service}.service.d/mounts.conf"))
-        .to notify("systemd_unit[#{this_service}.service]")
-        .to(:reload).immediately
-    end
+      it "reloads the #{this_service} unit after changing the systemd unit file" do
+        expect(chef_run.file("/etc/systemd/system/#{this_service}.service.d/mounts.conf"))
+          .to notify("systemd_unit[#{this_service}.service]")
+          .to(:reload).immediately
+      end
 
       it "restarts #{this_service} after changing the systemd unit file" do
         expect(chef_run.file("/etc/systemd/system/#{this_service}.service.d/mounts.conf"))

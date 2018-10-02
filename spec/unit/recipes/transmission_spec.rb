@@ -103,7 +103,7 @@ describe 'torrentbox::transmission' do
         .to(:stop).before
     end
 
-    it "reloads the transmission-daemon unit after changing the systemd unit file" do
+    it 'reloads the transmission-daemon unit after changing the systemd unit file' do
       expect(chef_run.file('/etc/systemd/system/transmission-daemon.service.d/mounts.conf'))
         .to notify('systemd_unit[transmission-daemon.service]')
         .to(:reload).immediately

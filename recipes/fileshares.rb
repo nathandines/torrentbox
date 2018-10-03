@@ -6,7 +6,7 @@
 
 samba_server "#{cookbook_name} CIFS Server" do
   workgroup            'WORKGROUP'
-  interfaces           'eth* ath* wlan* wifi*'
+  interfaces           'eth* ath* enp* wlan* wifi*'
   bind_interfaces_only 'yes'
   hosts_allow          '127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16'
   load_printers        'no'

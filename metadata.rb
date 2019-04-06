@@ -1,7 +1,7 @@
 name 'torrentbox'
 maintainer 'Nathan Dines'
 maintainer_email 'nath@ndin.es'
-license 'All Rights Reserved'
+license 'MIT'
 description 'Installs/Configures torrentbox'
 long_description 'Installs/Configures torrentbox'
 version '0.1.0'

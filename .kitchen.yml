@@ -4,12 +4,14 @@ driver:
 
 provisioner:
   name: chef_zero
+  chef_license: accept
   always_update_cookbooks: true
   product_name: chef
   product_version: '14.2'
 
 verifier:
   name: inspec
+  chef_license: accept
 
 platforms:
   - name: debian-9

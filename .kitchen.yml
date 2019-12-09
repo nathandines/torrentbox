@@ -13,6 +13,7 @@ verifier:
 
 platforms:
   - name: debian-9
+    architecture: x86_64
 
 suites:
   - name: default

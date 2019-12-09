@@ -13,7 +13,7 @@ be welcome for this.
 
 - Chef ~> 14.2
 - Inspec ~> 2.2
-- (Development) ChefDK ~> 3.2.30
+- (Development) ChefDK ~> 4.7.1
   - Requires test-kitchen ~> 1.23.0 for lifecycle hooks
 
 ## Development

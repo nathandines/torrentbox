@@ -145,7 +145,7 @@ describe 'torrentbox::remote_access' do
       # for a complete list of available platforms and versions see:
       # https://github.com/customink/fauxhai/blob/master/PLATFORMS.md
       runner = ChefSpec::ServerRunner.new(platform: 'debian', version: '9.4')
-      runner.node.normal['torrentbox']['remote_access']['ssh_authorized_keys'] = ssh_keys
+      runner.node.override['torrentbox']['remote_access']['ssh_authorized_keys'] = ssh_keys
       runner.converge(described_recipe)
     end
 

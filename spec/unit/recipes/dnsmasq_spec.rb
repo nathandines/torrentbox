@@ -26,9 +26,9 @@ describe 'torrentbox::dnsmasq' do
     it 'configures `dnsmasq`' do
       expect(chef_run).to create_template('/etc/dnsmasq.conf').with(
         variables: {
-          local_dns:    %w(8.8.8.8 8.8.4.4),
-          vpn_dns:      %w(1.1.1.1 1.0.0.1),
-          vpn_domain:   'privateinternetaccess.com',
+          local_dns: %w(8.8.8.8 8.8.4.4),
+          vpn_dns: %w(1.1.1.1 1.0.0.1),
+          vpn_domain: 'privateinternetaccess.com',
         },
         owner: 'root',
         group: 'root',

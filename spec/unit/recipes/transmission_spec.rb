@@ -27,7 +27,7 @@ describe 'torrentbox::transmission' do
       expect(chef_run).to create_directory('/var/lib/transmission-daemon/downloads').with(
         owner: 'debian-transmission',
         group: 'debian-transmission',
-        mode:  '2777'
+        mode: '2777'
       )
     end
 
@@ -35,7 +35,7 @@ describe 'torrentbox::transmission' do
       expect(chef_run).to create_directory('/var/lib/transmission-daemon/torrents').with(
         owner: 'debian-transmission',
         group: 'debian-transmission',
-        mode:  '2777'
+        mode: '2777'
       )
     end
 
@@ -44,7 +44,7 @@ describe 'torrentbox::transmission' do
         source: 'transmission/settings.json.erb',
         owner: 'debian-transmission',
         group: 'debian-transmission',
-        mode:  '0600',
+        mode: '0600',
         variables: {
           transmission_port: 51234,
           download_path: '/var/lib/transmission-daemon/downloads',
@@ -63,7 +63,7 @@ describe 'torrentbox::transmission' do
       expect(chef_run).to create_directory('/etc/systemd/system/transmission-daemon.service.d').with(
         owner: 'root',
         group: 'root',
-        mode:  '0755'
+        mode: '0755'
       )
     end
 
@@ -75,7 +75,7 @@ describe 'torrentbox::transmission' do
           UNIT_DEFINITION
         owner: 'root',
         group: 'root',
-        mode:  '0644'
+        mode: '0644'
       )
     end
 

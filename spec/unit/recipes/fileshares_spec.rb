@@ -31,7 +31,7 @@ describe 'torrentbox::fileshares' do
         expect(chef_run).to create_directory("/etc/systemd/system/#{this_service}.service.d").with(
           owner: 'root',
           group: 'root',
-          mode:  '0755'
+          mode: '0755'
         )
       end
 
@@ -79,7 +79,7 @@ describe 'torrentbox::fileshares' do
         platform: 'debian',
         version: '9.4'
       )
-      runner.node.normal['torrentbox']['fileshares'] = [
+      runner.node.override['torrentbox']['fileshares'] = [
         {
           'name': 'Some Share One',
           'path': '/somemount1',
@@ -111,7 +111,7 @@ describe 'torrentbox::fileshares' do
             UNIT_DEFINITION
           owner: 'root',
           group: 'root',
-          mode:  '0644'
+          mode: '0644'
         )
       end
 

@@ -42,7 +42,7 @@ describe 'torrentbox::default' do
       # for a complete list of available platforms and versions see:
       # https://github.com/customink/fauxhai/blob/master/PLATFORMS.md
       runner = ChefSpec::ServerRunner.new(platform: 'debian', version: '9.4')
-      runner.node.normal['torrentbox']['vpn_enabled'] = false
+      runner.node.override['torrentbox']['vpn_enabled'] = false
       runner.converge(described_recipe)
     end
 

@@ -3,9 +3,8 @@ maintainer 'Nathan Dines'
 maintainer_email 'nath@ndin.es'
 license 'MIT'
 description 'Installs/Configures torrentbox'
-long_description 'Installs/Configures torrentbox'
 version '0.1.0'
-chef_version '~> 14.2' if respond_to?(:chef_version)
+chef_version '~> 14.2'
 
 supports 'debian', '~> 9.4'
 

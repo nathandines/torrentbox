@@ -119,7 +119,7 @@ describe 'torrentbox::netconfig' do
       # for a complete list of available platforms and versions see:
       # https://github.com/customink/fauxhai/blob/master/PLATFORMS.md
       runner = ChefSpec::ServerRunner.new(platform: 'debian', version: '9.4')
-      runner.node.normal['torrentbox']['netconfig']['dynamic_configuration'] = true
+      runner.node.override['torrentbox']['netconfig']['dynamic_configuration'] = true
       runner.converge(described_recipe)
     end
 
@@ -161,7 +161,7 @@ describe 'torrentbox::netconfig' do
       # for a complete list of available platforms and versions see:
       # https://github.com/customink/fauxhai/blob/master/PLATFORMS.md
       runner = ChefSpec::ServerRunner.new(platform: 'debian', version: '9.4')
-      runner.node.normal['torrentbox']['netconfig']['additional_default_interface_options'] = [
+      runner.node.override['torrentbox']['netconfig']['additional_default_interface_options'] = [
         '# this is one option',
         '# this is another option',
       ]

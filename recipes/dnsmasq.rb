@@ -17,9 +17,9 @@ template '/etc/dnsmasq.conf' do
   mode     '0644'
   notifies :restart, 'service[dnsmasq]', :immediately
   variables(
-    local_dns:    node['torrentbox']['local_dns'],
-    vpn_dns:      node['torrentbox']['vpn_dns'],
-    vpn_domain:   node['torrentbox']['openvpn']['providers'][vpn_provider]['domain']
+    local_dns: node['torrentbox']['local_dns'],
+    vpn_dns: node['torrentbox']['vpn_dns'],
+    vpn_domain: node['torrentbox']['openvpn']['providers'][vpn_provider]['domain']
   )
 end
 

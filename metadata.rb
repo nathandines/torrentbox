@@ -4,7 +4,7 @@ maintainer_email 'nath@ndin.es'
 license 'MIT'
 description 'Installs/Configures torrentbox'
 version '0.1.0'
-chef_version '~> 14.2'
+chef_version '~> 15.5'
 
 supports 'debian', '~> 9.4'
 

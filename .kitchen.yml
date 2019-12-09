@@ -7,7 +7,7 @@ provisioner:
   chef_license: accept
   always_update_cookbooks: true
   product_name: chef
-  product_version: '14.2'
+  product_version: '15.5'
 
 verifier:
   name: inspec

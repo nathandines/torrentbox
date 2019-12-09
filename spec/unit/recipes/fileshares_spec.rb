@@ -92,6 +92,16 @@ describe 'torrentbox::fileshares' do
       runner.converge(described_recipe)
     end
 
+    ['/somemount1', '/some mount 2'].each do |this_share_path|
+      it "creates the `#{this_share_path}` directory" do
+        expect(chef_run).to create_directory(this_share_path).with(
+          owner: 'nobody',
+          group: 'nogroup',
+          mode: '0777'
+        )
+      end
+    end
+
     %w(smbd nmbd).each do |this_service|
       it "creates the `#{this_service}` service mount dependencies" do
         expect(chef_run).to create_file("/etc/systemd/system/#{this_service}.service.d/mounts.conf").with(

@@ -16,9 +16,20 @@ node['torrentbox']['fileshares'].each do |samba_share|
   share_name    = samba_share['name']
   share_path    = samba_share['path']
 
+  directory share_path do
+    action :create
+    recursive true
+    owner 'nobody'
+    group 'nogroup'
+    mode  '0777'
+  end
+
   samba_share share_name do
     path     share_path
     guest_ok 'yes'
+    create_directory false
+    create_mask '0666'
+    directory_mask '0777'
   end
 end
 

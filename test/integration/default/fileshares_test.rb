@@ -40,3 +40,12 @@ describe file('/etc/samba/smb.conf') do
   its('content') { should match(/load printers = no/) }
   its('content') { should match(/bind interfaces only = yes/) }
 end
+
+['/tmp/shareone', '/tmp/share two'].each do |this_share_path|
+  describe directory(this_share_path) do
+    it { should exist }
+    its('owner') { should eq 'nobody' }
+    its('group') { should eq 'nogroup' }
+    its('mode') { should cmp '0777' }
+  end
+end
